@@ -5,20 +5,21 @@ import { Input, Text, YStack } from "tamagui";
 import { Link, useRouter } from "expo-router";
 import StyledButton from "@/components/ui/button";
 import { useAuth } from "../context/AuthContext";
+import styles from "./styles";
 
 export default function Login() {
   const { login } = useAuth();
-  const [username, setUsername] = useState("admin");
-  const [password, setPassword] = useState("admin@123");
-  const router = useRouter();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  console.log("error: ", login.error);
 
   return (
     <View style={styles.container}>
-      <YStack
-        padding="$3"
-        gap="$2"
+      <View
         style={{
           width: "100%",
+          padding: 10,
+          gap: 3,
         }}
       >
         <Text
@@ -34,16 +35,16 @@ export default function Login() {
         <Text fontSize="$2">
           Start using the app by signing into your account
         </Text>
-      </YStack>
+      </View>
 
-      <YStack
-        padding="$3"
-        gap="$3"
+      <View
         style={{
           width: "100%",
           marginHorizontal: "auto",
           justifyContent: "center",
           alignItems: "center",
+          padding: 10,
+          gap: 8,
         }}
       >
         <Input
@@ -66,7 +67,9 @@ export default function Login() {
           value={password}
         />
         {login.error && (
-          <Text style={{ color: "red" }}>{login.error.response?.data}</Text>
+          <Text style={{ color: "red" }}>
+            {login.error.response?.data || login.error.message}
+          </Text>
         )}
         <StyledButton
           buttonStyle={{
@@ -81,20 +84,20 @@ export default function Login() {
         >
           {login.isPending ? "Please wait..." : "Sign In"}
         </StyledButton>
-      </YStack>
+      </View>
 
-      <YStack
-        padding="$3"
-        gap="$2"
+      <View
         style={{
           width: "100%",
           marginHorizontal: "auto",
           justifyContent: "center",
           alignItems: "center",
+          padding: 3,
+          gap: 5,
         }}
       >
         <Text>Don't have an account yet</Text>
-        <Link href="/auth/login">
+        <Link href="/auth/signup">
           <Text
             style={{
               color: "#0EBC60",
@@ -104,24 +107,8 @@ export default function Login() {
             Click here to register
           </Text>
         </Link>
-      </YStack>
+      </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    width: "90%",
-    marginHorizontal: "auto",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  input: {
-    width: "100%",
-    height: 50,
-    borderRadius: 4,
-    padding: 8,
-  },
-});

@@ -6,9 +6,7 @@ import { useAuth } from "./context/AuthContext";
 
 export default function Index() {
   const router = useRouter();
-
   const { authState } = useAuth();
-  console.log({ authState });
 
   if (authState?.waitAuthCheck) {
     return (
@@ -35,7 +33,6 @@ export default function Index() {
   }
 
   if (authState?.authenticated) {
-    console.log("reredirecting");
     return <Redirect href="/(app)/(tabs)/" />;
   }
 
@@ -128,6 +125,9 @@ export default function Index() {
             backgroundColor: "#0EBC60",
             borderWidth: 1,
             borderColor: "#0EBC60",
+          }}
+          onPress={() => {
+            router.push("/auth/signup");
           }}
           hoverStyle={{ backgroundColor: "#0EBC60", borderColor: "#0EBC60" }}
           pressStyle={{ backgroundColor: "#0EBC60", borderColor: "#0EBC60" }}
