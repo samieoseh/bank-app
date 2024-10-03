@@ -1,4 +1,10 @@
-import { View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  View,
+  Keyboard,
+  Platform,
+} from "react-native";
 import { ArrowLeft } from "lucide-react-native";
 import React, { useState } from "react";
 import styles from "./styles";
@@ -13,43 +19,49 @@ export default function Signup() {
   const router = useRouter();
 
   return (
-    <View style={styles.containerBox}>
-      <View>
-        <ArrowLeft
-          stroke="#0EBC60"
-          onPress={() => {
-            if (registrationStep === 1) {
-              router.push("/");
-            }
-            setRegistrationStep((prev) => prev - 1);
-          }}
-        />
-      </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.containerBox}>
+          <View>
+            <ArrowLeft
+              stroke="#0EBC60"
+              onPress={() => {
+                if (registrationStep === 1) {
+                  router.push("/");
+                }
+                setRegistrationStep((prev) => prev - 1);
+              }}
+            />
+          </View>
 
-      {/* steps */}
-      {registrationStep === 1 && (
-        <StepOne
-          incrementStep={() => setRegistrationStep(registrationStep + 1)}
-        />
-      )}
+          {/* steps */}
+          {registrationStep === 1 && (
+            <StepOne
+              incrementStep={() => setRegistrationStep(registrationStep + 1)}
+            />
+          )}
 
-      {registrationStep === 2 && (
-        <StepTwo
-          incrementStep={() => setRegistrationStep(registrationStep + 1)}
-        />
-      )}
+          {registrationStep === 2 && (
+            <StepTwo
+              incrementStep={() => setRegistrationStep(registrationStep + 1)}
+            />
+          )}
 
-      {registrationStep === 3 && (
-        <StepThree
-          incrementStep={() => setRegistrationStep(registrationStep + 1)}
-        />
-      )}
+          {registrationStep === 3 && (
+            <StepThree
+              incrementStep={() => setRegistrationStep(registrationStep + 1)}
+            />
+          )}
 
-      {registrationStep === 4 && (
-        <StepFour
-          incrementStep={() => setRegistrationStep(registrationStep + 1)}
-        />
-      )}
-    </View>
+          {registrationStep === 4 && (
+            <StepFour
+              incrementStep={() => setRegistrationStep(registrationStep + 1)}
+            />
+          )}
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
