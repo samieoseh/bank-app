@@ -13,6 +13,8 @@ import StepTwo from "@/components/registration-steps/step-two";
 import StepThree from "@/components/registration-steps/step-three";
 import { router, useRouter } from "expo-router";
 import StepFour from "@/components/registration-steps/step-four";
+import StepFive from "@/components/registration-steps/step-five";
+import StepSix from "@/components/registration-steps/step-six";
 
 export default function Signup() {
   const [registrationStep, setRegistrationStep] = useState(1);
@@ -60,6 +62,13 @@ export default function Signup() {
               incrementStep={() => setRegistrationStep(registrationStep + 1)}
             />
           )}
+
+          {registrationStep === 5 && (
+            <StepFive
+              incrementStep={() => setRegistrationStep(registrationStep + 1)}
+            />
+          )}
+          {registrationStep === 6 && <StepSix />}
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

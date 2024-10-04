@@ -13,7 +13,6 @@ export default function ActionButton({
   loading?: boolean;
   message?: string;
 }) {
-  console.log({ loading });
   return (
     <StyledButton
       buttonStyle={{
@@ -21,7 +20,7 @@ export default function ActionButton({
         backgroundColor: canContinue() && !loading ? "#0EBC60" : "#D3D3D3",
         borderColor: canContinue() && !loading ? "#0EBC60" : "#D3D3D3",
         position: "absolute",
-        bottom: 30,
+        bottom: 5,
       }}
       disabled={!canContinue() || loading}
       onPress={() => {

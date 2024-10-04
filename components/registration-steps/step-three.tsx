@@ -23,7 +23,6 @@ export default function StepThree({
   const registrationData = useSelector((state: RootState) =>
     selectUserRegistrationData(state)
   );
-  console.log({ registrationData });
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -47,13 +46,13 @@ export default function StepThree({
 
       toast.show("Email verified!", {
         message: "Don't worry, we've verified your email.",
-        native: false,
+        native: true,
       });
       dispatch(setUserRegistrationData({ emailVerified: true }));
     } catch (error) {
       toast.show("Email verification failed!", {
         message: "Check your email and try again",
-        native: false,
+        native: true,
         type: "error",
       });
     }
@@ -83,8 +82,8 @@ export default function StepThree({
         </Text>
       </View>
       <TokenInput
-        token={registrationData.token}
-        setToken={setUserRegistrationData}
+        value={registrationData.token}
+        setValue={setUserRegistrationData}
       />
 
       <ActionButton

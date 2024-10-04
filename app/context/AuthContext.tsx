@@ -5,6 +5,8 @@ import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 import { UseMutationResult, useMutation } from "@tanstack/react-query";
 import { router } from "expo-router";
+import { useDispatch } from "react-redux";
+import { setCurrentLoggedInUser } from "@/store/authSlice";
 
 interface loginCredentials {
   username: string;
@@ -42,6 +44,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }: any) => {
+  const dispatch = useDispatch()
   const [authState, setAuthState] = useState<{
     token: String | null;
     authenticated: boolean | null;
@@ -98,7 +101,6 @@ export const AuthProvider = ({ children }: any) => {
           password,
         }
       );
-      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -115,9 +117,11 @@ export const AuthProvider = ({ children }: any) => {
         }
       );
 
+      const data  = await response.data;
       setAuthState({
         token: response.data.accessToken,
         authenticated: true,
+        waitAuthCheck: false,
       });
       axios.defaults.headers.common[
         "Authorization"
@@ -128,8 +132,22 @@ export const AuthProvider = ({ children }: any) => {
         response.data.accessToken
       );
 
+      dispatch(
+        setCurrentLoggedInUser({
+          fullName: data.fullName,
+          accountNumber: data.accountNumber,
+          username: data.username,
+          emailAddress: data.email,
+          balance: data.balance,
+          id: response.data.id,
+          active: data.active,
+          userRole: data.userRole,
+          accountType: data.accountType,
+        })
+      );
+
       router.push("/(app)/(tabs)/");
-      return response.data;
+      return data;
     },
   });
 
@@ -141,8 +159,8 @@ export const AuthProvider = ({ children }: any) => {
       setAuthState({
         token: null,
         authenticated: false,
+        waitAuthCheck: false,
       });
-      console.log("logged out");
     } catch (error) {
       console.log(error);
     }
@@ -157,11 +175,11 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   useEffect(() => {
+    console.log("running useEffect")
     const loadToken = async () => {
       const token = await getValueFor(
         process.env.EXPO_PUBLIC_JWT_KEY || "jwt_access_token"
       );
-      console.log({ token });
       if (token) {
         setAuthState({
           token,

@@ -5,20 +5,24 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 
 export default function TokenInput({
-  token,
-  setToken,
+  value,
+  setValue,
+  valueLabel = "token",
+  length = 6,
 }: {
-  token: string;
-  setToken: Function;
+  value: string;
+  valueLabel?: string;
+  setValue: Function;
+  length?: number;
 }) {
   const dispatch: AppDispatch = useDispatch();
 
   const inputRefs = useRef<Array<any>>([]);
 
   const handleInputChange = (text: string, index: number) => {
-    const newToken = token.split("");
+    const newToken = value.split("");
     newToken[index] = text;
-    dispatch(setToken({ token: newToken.join("") }));
+    dispatch(setValue({ [valueLabel]: newToken.join("") }));
 
     // Move to next input if the current one is filled
     if (text && index < inputRefs.current.length - 1) {
@@ -36,16 +40,18 @@ export default function TokenInput({
       style={{
         display: "flex",
         flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
         gap: 5,
       }}
     >
-      {[...Array(6)].map((_, index) => (
+      {[...Array(length)].map((_, index) => (
         <Input
           key={index}
           maxLength={1}
           ref={(el) => (inputRefs.current[index] = el)}
           keyboardType="phone-pad"
-          value={token[index] || ""}
+          value={value[index] || ""}
           onChangeText={(text) => handleInputChange(text, index)}
           style={{
             textAlign: "center",

@@ -11,7 +11,7 @@ import {
   setUserRegistrationData,
 } from "@/store/authSlice";
 
-export default function StepFour({
+export default function StepFive({
   incrementStep,
 }: {
   incrementStep: () => void;
@@ -23,7 +23,10 @@ export default function StepFour({
   const dispatch: AppDispatch = useDispatch();
 
   const canContinue = () => {
-    return registrationData.address.length >= 20;
+    return (
+      registrationData.password.length >= 8 &&
+      registrationData.password === registrationData.confirmPassword
+    );
   };
 
   return (
@@ -39,21 +42,35 @@ export default function StepFour({
         }}
       >
         <Text fontSize="$6" fontWeight="900">
-          What's Your Residential Address?
+          Create your password
         </Text>
-        <Text fontSize="$2">Please give us details of where you live</Text>
+        <Text fontSize="$2">Please enter a strong password</Text>
       </View>
       <Input
-        placeholder="Residential Address"
+        placeholder="Password"
         style={{
           ...styles.input,
           marginTop: 20,
         }}
         keyboardType="default"
+        secureTextEntry
         onChangeText={(text) => {
-          dispatch(setUserRegistrationData({ address: text }));
+          dispatch(setUserRegistrationData({ password: text }));
         }}
-        value={registrationData.address}
+        value={registrationData.password}
+      />
+      <Input
+        placeholder="Confirm Password"
+        style={{
+          ...styles.input,
+          marginTop: 20,
+        }}
+        keyboardType="default"
+        secureTextEntry
+        onChangeText={(text) => {
+          dispatch(setUserRegistrationData({ confirmPassword: text }));
+        }}
+        value={registrationData.confirmPassword}
       />
       <ActionButton
         canContinue={canContinue}

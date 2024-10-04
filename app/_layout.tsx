@@ -50,12 +50,16 @@ export default function RootLayout() {
           value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         >
           <QueryClientProvider client={queryClient}>
-            <ToastProvider>
-              <AuthProvider>
+            <AuthProvider>
+              <ToastProvider>
                 <Slot />
-              </AuthProvider>
-              <ToastViewport flexDirection="column-reverse" top={0} right={0} />
-            </ToastProvider>
+                <ToastViewport
+                  flexDirection="column-reverse"
+                  top={0}
+                  right={0}
+                />
+              </ToastProvider>
+            </AuthProvider>
           </QueryClientProvider>
         </ThemeProvider>
       </TamaguiProvider>

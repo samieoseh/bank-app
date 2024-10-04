@@ -9,7 +9,6 @@ import { useAuth } from "@/app/context/AuthContext";
 import { useRouter } from "expo-router";
 
 export default function HomeScreen() {
-  console.log("in home screen");
   const { logout } = useAuth();
   const router = useRouter();
 
@@ -60,10 +59,10 @@ export default function HomeScreen() {
       <StyledButton
         onPress={() => {
           logout();
-          router.push("/auth/login");
+          router.push("/auth/welcome");
         }}
       >
-        Logout
+        Welcome
       </StyledButton>
     </ParallaxScrollView>
   );

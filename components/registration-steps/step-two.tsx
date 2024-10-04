@@ -29,7 +29,8 @@ export default function StepTwo({
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return (
       registrationData.emailAddress.length >= 15 &&
-      emailRegex.test(registrationData.emailAddress)
+      emailRegex.test(registrationData.emailAddress) &&
+      registrationData.phoneNumber.length === 11
     );
   };
 
@@ -63,24 +64,66 @@ export default function StepTwo({
         }}
       >
         <Text fontSize="$6" fontWeight="900">
-          What's Your Email Address?
+          Contact Information?
         </Text>
         <Text fontSize="$2">
-          Enter the email address you want to use to create your account
+          Enter the email address and phone number you want to use to create
+          your account
         </Text>
       </View>
-      <Input
-        placeholder="Email Address"
+      <View
         style={{
-          ...styles.input,
           marginTop: 20,
         }}
-        keyboardType="email-address"
-        onChangeText={(text) => {
-          dispatch(setUserRegistrationData({ emailAddress: text }));
+      >
+        <Text
+          style={{
+            fontSize: 12,
+            color: "#A5A5A5",
+          }}
+        >
+          Phone Number
+        </Text>
+        <Input
+          placeholder="Phone Number"
+          style={{
+            ...styles.input,
+            marginTop: 5,
+          }}
+          keyboardType="phone-pad"
+          onChangeText={(text) => {
+            dispatch(setUserRegistrationData({ phoneNumber: text }));
+          }}
+          value={registrationData.phoneNumber}
+        />
+      </View>
+
+      <View
+        style={{
+          marginTop: 20,
         }}
-        value={registrationData.emailAddress}
-      />
+      >
+        <Text
+          style={{
+            fontSize: 12,
+            color: "#A5A5A5",
+          }}
+        >
+          Email Address
+        </Text>
+        <Input
+          placeholder="Email Address"
+          style={{
+            ...styles.input,
+            marginTop: 5,
+          }}
+          keyboardType="email-address"
+          onChangeText={(text) => {
+            dispatch(setUserRegistrationData({ emailAddress: text }));
+          }}
+          value={registrationData.emailAddress}
+        />
+      </View>
       <ActionButton
         canContinue={canContinue}
         pressHandler={async () => {

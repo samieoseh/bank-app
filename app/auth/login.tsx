@@ -9,9 +9,8 @@ import styles from "./styles";
 
 export default function Login() {
   const { login } = useAuth();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  console.log("error: ", login.error);
+  const [username, setUsername] = useState("samieoseh");
+  const [password, setPassword] = useState("12345678");
 
   return (
     <View style={styles.container}>
@@ -57,7 +56,7 @@ export default function Login() {
           value={username}
         />
         <Input
-          placeholder="Enter the 6-digit password"
+          placeholder="Enter password"
           style={styles.input}
           keyboardType="default"
           secureTextEntry

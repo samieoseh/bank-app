@@ -22,7 +22,10 @@ export default function StepOne({
   const dispatch: AppDispatch = useDispatch();
 
   const canContinue = () => {
-    return registrationData.phoneNumber.length === 11;
+    return (
+      registrationData.username.length > 8 &&
+      registrationData.fullName.length > 8
+    );
   };
 
   return (
@@ -38,24 +41,68 @@ export default function StepOne({
         }}
       >
         <Text fontSize="$6" fontWeight="900">
-          What's Your Phone Number?
+          Basic Information
         </Text>
         <Text fontSize="$2">
-          Enter the phone number you want to use to create your account
+          Enter your basic information you want to use to create your account
         </Text>
       </View>
-      <Input
-        placeholder="Phone Number"
+
+      <View
         style={{
-          ...styles.input,
           marginTop: 20,
         }}
-        keyboardType="phone-pad"
-        onChangeText={(text) => {
-          dispatch(setUserRegistrationData({ phoneNumber: text }));
+      >
+        <Text
+          style={{
+            fontSize: 12,
+            color: "#A5A5A5",
+          }}
+        >
+          Full Name
+        </Text>
+
+        <Input
+          placeholder="Full Name"
+          style={{
+            ...styles.input,
+            marginTop: 5,
+          }}
+          keyboardType="default"
+          onChangeText={(text) => {
+            dispatch(setUserRegistrationData({ fullName: text }));
+          }}
+          value={registrationData.fullName}
+        />
+      </View>
+
+      <View
+        style={{
+          marginTop: 20,
         }}
-        value={registrationData.phoneNumber}
-      />
+      >
+        <Text
+          style={{
+            fontSize: 12,
+            color: "#A5A5A5",
+          }}
+        >
+          Username
+        </Text>
+        <Input
+          placeholder="Username"
+          style={{
+            ...styles.input,
+            marginTop: 5,
+          }}
+          keyboardType="default"
+          onChangeText={(text) => {
+            dispatch(setUserRegistrationData({ username: text }));
+          }}
+          value={registrationData.username}
+        />
+      </View>
+
       <ActionButton
         canContinue={canContinue}
         pressHandler={() => {
