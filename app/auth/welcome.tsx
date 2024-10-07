@@ -12,14 +12,10 @@ import {
 import { useAuth } from "../context/AuthContext";
 
 export default function Welcome() {
-  const { authState } = useAuth();
-  console.log({ authState });
-
   const currentLoggedInUser = useSelector((state: RootState) =>
     selectCurrentLoggedInUser(state)
   );
 
-  console.log({ currentLoggedInUser });
   const router = useRouter();
   return (
     <View style={{ ...styles.containerBox, marginTop: 48 }}>

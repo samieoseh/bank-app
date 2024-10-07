@@ -11,7 +11,7 @@ import styles from "./styles";
 import StepOne from "@/components/registration-steps/step-one";
 import StepTwo from "@/components/registration-steps/step-two";
 import StepThree from "@/components/registration-steps/step-three";
-import { router, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import StepFour from "@/components/registration-steps/step-four";
 import StepFive from "@/components/registration-steps/step-five";
 import StepSix from "@/components/registration-steps/step-six";

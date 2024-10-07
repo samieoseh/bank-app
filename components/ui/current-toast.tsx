@@ -3,7 +3,6 @@ import { YStack } from "tamagui";
 
 const CurrentToast = () => {
   const currentToast = useToastState();
-  console.log({ currentToast });
 
   if (!currentToast || currentToast.isHandledNatively) return null;
 

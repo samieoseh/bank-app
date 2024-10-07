@@ -59,10 +59,10 @@ export default function HomeScreen() {
       <StyledButton
         onPress={() => {
           logout();
-          router.push("/auth/welcome");
+          router.push("/auth/login");
         }}
       >
-        Welcome
+        Logout
       </StyledButton>
     </ParallaxScrollView>
   );

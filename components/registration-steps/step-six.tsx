@@ -8,6 +8,7 @@ import CurrentToast from "../ui/current-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import {
+  resetUserRegistrationData,
   selectUserRegistrationData,
   setCurrentLoggedInUser,
   setUserRegistrationData,
@@ -54,6 +55,7 @@ export default function StepSix() {
       // find the user role
       const userRole = roles.find((role: any) => role.roleName === "user");
 
+      console.log({ accountTypes });
       // find the savings account
       const savingsAccount = accountTypes.find(
         (accountType: any) => accountType.typeName === "Savings"
@@ -95,6 +97,7 @@ export default function StepSix() {
         type: "success",
       });
 
+      dispatch(resetUserRegistrationData());
       router.push("/auth/welcome");
     } catch (error) {
       console.error(error);

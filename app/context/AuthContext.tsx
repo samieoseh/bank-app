@@ -117,7 +117,7 @@ export const AuthProvider = ({ children }: any) => {
         }
       );
 
-      const data  = await response.data;
+      const data = await response.data;
       setAuthState({
         token: response.data.accessToken,
         authenticated: true,
@@ -132,21 +132,22 @@ export const AuthProvider = ({ children }: any) => {
         response.data.accessToken
       );
 
+      const { user } = data;
+      console.log({ user });
       dispatch(
         setCurrentLoggedInUser({
-          fullName: data.fullName,
-          accountNumber: data.accountNumber,
-          username: data.username,
-          emailAddress: data.email,
-          balance: data.balance,
-          id: response.data.id,
-          active: data.active,
-          userRole: data.userRole,
-          accountType: data.accountType,
+          fullName: user.fullName,
+          accountNumber: user.accountNumber,
+          username: user.username,
+          emailAddress: user.email,
+          balance: user.balance,
+          id: user.id,
+          active: user.active,
+          userRole: user.userRole,
+          accountType: user.accountType,
         })
       );
 
-      router.push("/(app)/(tabs)/");
       return data;
     },
   });
@@ -175,7 +176,6 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   useEffect(() => {
-    console.log("running useEffect")
     const loadToken = async () => {
       const token = await getValueFor(
         process.env.EXPO_PUBLIC_JWT_KEY || "jwt_access_token"

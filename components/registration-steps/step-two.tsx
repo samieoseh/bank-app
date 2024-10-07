@@ -1,8 +1,7 @@
 import { View } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Input, Text } from "tamagui";
 import styles from "@/app/auth/styles";
-import StyledButton from "../ui/button";
 import ActionButton from "./action-button";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,11 +11,20 @@ import {
   setUserRegistrationData,
 } from "@/store/authSlice";
 
+interface Errors {
+  phoneNumber?: string;
+  emailAddress?: string;
+}
+
 export default function StepTwo({
   incrementStep,
 }: {
   incrementStep: () => void;
 }) {
+  const [errors, setErrors] = useState<Errors>({});
+  const emailInputRef = useRef(null);
+  const phoneInputRef = useRef(null);
+
   const [sendingEmail, setSendingEmail] = useState(false);
 
   const registrationData = useSelector((state: RootState) =>
@@ -32,6 +40,39 @@ export default function StepTwo({
       emailRegex.test(registrationData.emailAddress) &&
       registrationData.phoneNumber.length === 11
     );
+  };
+
+  const validatePhoneNumber = async (phoneNumber: string) => {
+    try {
+      const response = await axios.get(
+        process.env.EXPO_PUBLIC_REMOTE_DEPLOYMENT_URL +
+          `/api/users/register/validate-phone-number/${phoneNumber}`
+      );
+      {
+        setErrors({});
+      }
+
+      return response;
+    } catch (error) {
+      setErrors((prev) => ({ ...prev, phoneNumber: error.response.data }));
+      phoneInputRef?.current?.focus();
+    }
+  };
+
+  const validateEmail = async (emailAddress: string) => {
+    try {
+      const response = await axios.get(
+        process.env.EXPO_PUBLIC_REMOTE_DEPLOYMENT_URL +
+          `/api/users/register/validate-email/${emailAddress}`
+      );
+      {
+        setErrors({});
+      }
+      return response;
+    } catch (error) {
+      setErrors((prev) => ({ ...prev, emailAddress: error.response.data }));
+      emailInputRef?.current?.focus();
+    }
   };
 
   const sendEmail = async (emailAddress: string) => {
@@ -89,13 +130,21 @@ export default function StepTwo({
           style={{
             ...styles.input,
             marginTop: 5,
+            borderWidth: errors?.phoneNumber ? 1 : 0,
+            borderColor: errors?.phoneNumber ? "red" : "transparent",
           }}
+          ref={phoneInputRef}
           keyboardType="phone-pad"
           onChangeText={(text) => {
             dispatch(setUserRegistrationData({ phoneNumber: text }));
           }}
           value={registrationData.phoneNumber}
         />
+        <Text>
+          {errors?.phoneNumber ? (
+            <Text style={{ color: "red" }}>{errors?.phoneNumber}</Text>
+          ) : null}
+        </Text>
       </View>
 
       <View
@@ -113,9 +162,12 @@ export default function StepTwo({
         </Text>
         <Input
           placeholder="Email Address"
+          ref={emailInputRef}
           style={{
             ...styles.input,
             marginTop: 5,
+            borderWidth: errors?.emailAddress ? 1 : 0,
+            borderColor: errors?.emailAddress ? "red" : "transparent",
           }}
           keyboardType="email-address"
           onChangeText={(text) => {
@@ -123,6 +175,11 @@ export default function StepTwo({
           }}
           value={registrationData.emailAddress}
         />
+        <Text>
+          {errors?.emailAddress ? (
+            <Text style={{ color: "red" }}>{errors?.emailAddress}</Text>
+          ) : null}
+        </Text>
       </View>
       <ActionButton
         canContinue={canContinue}
@@ -131,7 +188,17 @@ export default function StepTwo({
           if (registrationData.emailVerified) {
             incrementStep();
           } else {
-            await sendEmail(registrationData.emailAddress);
+            const response1 = await validatePhoneNumber(
+              registrationData.phoneNumber
+            );
+            const response2 = await validateEmail(
+              registrationData.emailAddress
+            );
+            if (response1?.status === 200 && response2?.status === 200) {
+              await sendEmail(registrationData.emailAddress);
+            } else {
+              console.log("error", response1, response2);
+            }
           }
         }}
         loading={sendingEmail}

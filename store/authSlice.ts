@@ -88,6 +88,9 @@ const authSlice = createSlice({
         ...action.payload,
       };
     },
+    resetUserRegistrationData: (state) => {
+      state.userRegistrationData = initialState.userRegistrationData;
+    },
     setCurrentLoggedInUser: (state, action: PayloadAction<CurrentLoggedInUser>) => {
       state.currentLoggedInUser = action.payload;
     }
@@ -95,7 +98,7 @@ const authSlice = createSlice({
 });
 
 // Export the actions
-export const { setUserRegistrationData, setCurrentLoggedInUser } = authSlice.actions;
+export const { setUserRegistrationData, resetUserRegistrationData,  setCurrentLoggedInUser } = authSlice.actions;
 
 // Selector
 export const selectUserRegistrationData = (state: { auth: AuthState }): UserRegistrationData => 

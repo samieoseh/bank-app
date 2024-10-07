@@ -1,8 +1,7 @@
 import { View } from "react-native";
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Input, Text } from "tamagui";
 import styles from "@/app/auth/styles";
-import StyledButton from "../ui/button";
 import ActionButton from "./action-button";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -10,12 +9,21 @@ import {
   setUserRegistrationData,
 } from "@/store/authSlice";
 import { AppDispatch, RootState } from "@/store";
+import axios from "axios";
+import { useToastController } from "@tamagui/toast";
+
+interface Errors {
+  username?: string;
+}
 
 export default function StepOne({
   incrementStep,
 }: {
   incrementStep: () => void;
 }) {
+  const [errors, setErrors] = useState<Errors>({});
+  const usernameInputRef = useRef(null);
+
   const registrationData = useSelector((state: RootState) =>
     selectUserRegistrationData(state)
   );
@@ -27,6 +35,24 @@ export default function StepOne({
       registrationData.fullName.length > 8
     );
   };
+
+  const validateUsernameAndIncrement = async (username: string) => {
+    try {
+      await axios.get(
+        process.env.EXPO_PUBLIC_REMOTE_DEPLOYMENT_URL +
+          `/api/users/register/validate-username/${username}`
+      );
+      {
+        setErrors({});
+        incrementStep();
+      }
+    } catch (error) {
+      setErrors({ username: error.response.data });
+      usernameInputRef?.current?.focus();
+    }
+  };
+
+  console.log({ errors });
 
   return (
     <View
@@ -94,19 +120,28 @@ export default function StepOne({
           style={{
             ...styles.input,
             marginTop: 5,
+
+            borderWidth: errors?.username ? 1 : 0,
+            borderColor: errors?.username ? "red" : "transparent",
           }}
           keyboardType="default"
           onChangeText={(text) => {
             dispatch(setUserRegistrationData({ username: text }));
           }}
+          ref={usernameInputRef}
           value={registrationData.username}
         />
+        <Text>
+          {errors?.username ? (
+            <Text style={{ color: "red" }}>{errors?.username}</Text>
+          ) : null}
+        </Text>
       </View>
 
       <ActionButton
         canContinue={canContinue}
-        pressHandler={() => {
-          incrementStep();
+        pressHandler={async () => {
+          await validateUsernameAndIncrement(registrationData.username);
         }}
       />
     </View>

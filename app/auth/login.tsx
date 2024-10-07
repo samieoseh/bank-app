@@ -6,11 +6,14 @@ import { Link, useRouter } from "expo-router";
 import StyledButton from "@/components/ui/button";
 import { useAuth } from "../context/AuthContext";
 import styles from "./styles";
+import { Eye, EyeOff } from "lucide-react-native";
 
 export default function Login() {
+  const router = useRouter();
   const { login } = useAuth();
-  const [username, setUsername] = useState("samieoseh");
-  const [password, setPassword] = useState("12345678");
+  const [showPassword, setShowPassword] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <View style={styles.container}>
@@ -55,16 +58,49 @@ export default function Login() {
           }}
           value={username}
         />
-        <Input
-          placeholder="Enter password"
-          style={styles.input}
-          keyboardType="default"
-          secureTextEntry
-          onChangeText={(text) => {
-            setPassword(text);
+        <View
+          style={{
+            width: "100%",
+            marginHorizontal: "auto",
+            position: "relative",
           }}
-          value={password}
-        />
+        >
+          <Input
+            placeholder="Enter password"
+            style={{ ...styles.input, paddingRight: 45 }}
+            keyboardType="default"
+            secureTextEntry={!showPassword}
+            onChangeText={(text) => {
+              setPassword(text);
+            }}
+            value={password}
+          />
+          {!showPassword ? (
+            <Eye
+              stroke="#444444"
+              style={{
+                position: "absolute",
+                right: 10,
+                top: 15,
+              }}
+              onPress={() => {
+                setShowPassword(true);
+              }}
+            />
+          ) : (
+            <EyeOff
+              stroke="#444444"
+              style={{
+                position: "absolute",
+                right: 10,
+                top: 15,
+              }}
+              onPress={() => {
+                setShowPassword(false);
+              }}
+            />
+          )}
+        </View>
         {login.error && (
           <Text style={{ color: "red" }}>
             {login.error.response?.data || login.error.message}
@@ -78,7 +114,14 @@ export default function Login() {
           }}
           disabled={login.isPending}
           onPress={() => {
-            login.mutate({ username, password });
+            login.mutate(
+              { username, password },
+              {
+                onSuccess: () => {
+                  router.push("/(app)/(tabs)/");
+                },
+              }
+            );
           }}
         >
           {login.isPending ? "Please wait..." : "Sign In"}
