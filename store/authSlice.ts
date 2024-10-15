@@ -38,9 +38,20 @@ interface CurrentLoggedInUser {
   accountType: AccountType,
 }
 
+interface UserUpdateRegistrationData {
+  fullName: string,
+  accountNumber: string,
+  username: string, 
+  password: string, 
+  confirmPassword: string,
+  transactionPin: string,
+  confirmTransactionPin: string
+}
+
 export interface AuthState {
   userRegistrationData: UserRegistrationData;
   currentLoggedInUser: CurrentLoggedInUser;
+  userUpdateRegistrationData: UserUpdateRegistrationData;
 }
 
 const initialState: AuthState = {
@@ -76,6 +87,16 @@ const initialState: AuthState = {
       typeName: "",
     }
   },
+
+  userUpdateRegistrationData: {
+    fullName: "",
+    accountNumber: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+    transactionPin: "",
+    confirmTransactionPin: "",
+  }
 };
 
 const authSlice = createSlice({
@@ -88,8 +109,18 @@ const authSlice = createSlice({
         ...action.payload,
       };
     },
+
+    setUserUpdateRegistrationData: (state, action: PayloadAction<Partial<UserUpdateRegistrationData>>) => {
+      state.userUpdateRegistrationData = {
+        ...state.userUpdateRegistrationData,
+        ...action.payload,
+      }
+    },
     resetUserRegistrationData: (state) => {
       state.userRegistrationData = initialState.userRegistrationData;
+    },
+    resetUserUpdateRegistrationData: (state) => { 
+      state.userUpdateRegistrationData = initialState.userUpdateRegistrationData
     },
     setCurrentLoggedInUser: (state, action: PayloadAction<CurrentLoggedInUser>) => {
       state.currentLoggedInUser = action.payload;
@@ -98,11 +129,14 @@ const authSlice = createSlice({
 });
 
 // Export the actions
-export const { setUserRegistrationData, resetUserRegistrationData,  setCurrentLoggedInUser } = authSlice.actions;
+export const { setUserRegistrationData, setUserUpdateRegistrationData, resetUserRegistrationData, resetUserUpdateRegistrationData, setCurrentLoggedInUser } = authSlice.actions;
 
 // Selector
 export const selectUserRegistrationData = (state: { auth: AuthState }): UserRegistrationData => 
   state.auth.userRegistrationData;
+
+export const selectUserUpdateRegistrationData = (state: { auth: AuthState }): UserUpdateRegistrationData =>
+  state.auth.userUpdateRegistrationData;
 
 export const selectCurrentLoggedInUser = (state: { auth: AuthState }): CurrentLoggedInUser => state.auth.currentLoggedInUser;
 

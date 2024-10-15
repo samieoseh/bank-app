@@ -1,7 +1,6 @@
-import { View, StyleSheet } from "react-native";
+import { View } from "react-native";
 import React, { useState } from "react";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { Input, Text, YStack } from "tamagui";
+import { Input, Text } from "tamagui";
 import { Link, useRouter } from "expo-router";
 import StyledButton from "@/components/ui/button";
 import { useAuth } from "../context/AuthContext";
@@ -144,13 +143,25 @@ export default function Login() {
             style={{
               color: "#0EBC60",
               fontWeight: "900",
+              textDecorationLine: "underline",
             }}
           >
             Click here to register
+          </Text>
+        </Link>
+        <Text>Or</Text>
+        <Link href="/auth/register-with-account">
+          <Text
+            style={{
+              color: "#0EBC60",
+              fontWeight: "900",
+              textDecorationLine: "underline",
+            }}
+          >
+            Register with account number
           </Text>
         </Link>
       </View>
     </View>
   );
 }
-

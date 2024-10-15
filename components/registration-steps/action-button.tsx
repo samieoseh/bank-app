@@ -19,8 +19,9 @@ export default function ActionButton({
         width: "100%",
         backgroundColor: canContinue() && !loading ? "#0EBC60" : "#D3D3D3",
         borderColor: canContinue() && !loading ? "#0EBC60" : "#D3D3D3",
-        position: "absolute",
-        bottom: 5,
+        marginVertical: 35,
+        // position: "absolute",
+        // bottom: 0,
       }}
       disabled={!canContinue() || loading}
       onPress={() => {
