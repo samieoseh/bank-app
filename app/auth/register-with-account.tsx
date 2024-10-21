@@ -27,7 +27,7 @@ export default function RegisterWithAccount() {
         <View style={styles.containerBox}>
           <View>
             <ArrowLeft
-              stroke="#0EBC60"
+              stroke="#000080"
               onPress={() => {
                 if (step === 1) {
                   router.push("/");

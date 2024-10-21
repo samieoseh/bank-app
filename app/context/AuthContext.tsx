@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
@@ -20,7 +20,7 @@ interface CustomError extends Error {
   };
 }
 
-interface AuthContextProps {
+export interface AuthContextProps {
   authState?: {
     token: String | null;
     authenticated: boolean | null;
@@ -44,7 +44,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }: any) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [authState, setAuthState] = useState<{
     token: String | null;
     authenticated: boolean | null;
@@ -162,6 +162,7 @@ export const AuthProvider = ({ children }: any) => {
         authenticated: false,
         waitAuthCheck: false,
       });
+      router.push("/auth/login");
     } catch (error) {
       console.log(error);
     }
@@ -176,26 +177,52 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   useEffect(() => {
-    const loadToken = async () => {
-      const token = await getValueFor(
-        process.env.EXPO_PUBLIC_JWT_KEY || "jwt_access_token"
-      );
-      if (token) {
-        setAuthState({
-          token,
-          authenticated: true,
-          waitAuthCheck: false,
-        });
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      } else {
-        setAuthState({
-          token: null,
-          authenticated: false,
-          waitAuthCheck: false,
-        });
+    const loadTokenAndUser = async () => {
+      try {
+        const token = await getValueFor(
+          process.env.EXPO_PUBLIC_JWT_KEY || "jwt_access_token"
+        );
+        if (token) {
+          setAuthState({
+            token,
+            authenticated: true,
+            waitAuthCheck: false,
+          });
+          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+          // get user
+          const response = await axios.get(process.env.EXPO_PUBLIC_REMOTE_DEPLOYMENT_URL + "/api/users/me");
+          const user = response.data;
+          dispatch(
+            setCurrentLoggedInUser({
+              fullName: user.fullName,
+              accountNumber: user.accountNumber,
+              username: user.username,
+              emailAddress: user.email,
+              balance: user.balance,
+              id: user.id,
+              active: user.active,
+              userRole: user.userRole,
+              accountType: user.accountType,
+            })
+          );
+        } else {
+          setAuthState({
+            token: null,
+            authenticated: false,
+            waitAuthCheck: false,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        if (isAxiosError(error)) {
+          console.error(error.response?.data);
+        } else {
+          console.error("An error occured!");
+        }
       }
     };
-    loadToken();
+    loadTokenAndUser();
   }, []);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

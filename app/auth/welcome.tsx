@@ -193,8 +193,8 @@ export default function Welcome() {
       <Button
         style={{
           width: "100%",
-          backgroundColor: "#0EBC60",
-          borderColor: "#0EBC60",
+          backgroundColor: "#008080",
+          borderColor: "#008080",
           color: "#fff",
         }}
         onPress={() => {

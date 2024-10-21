@@ -23,7 +23,7 @@ export default function Index() {
             fontSize: 24,
             fontWeight: 900,
             textAlign: "center",
-            color: "#0EBC60",
+            color: "#008080",
           }}
         >
           Loading...
@@ -106,12 +106,12 @@ export default function Index() {
           style={{
             flex: 1,
             backgroundColor: "#fff",
-            borderColor: "#0EBC60",
+            borderColor: "#008080",
             borderWidth: 1,
-            color: "#0EBC60",
+            color: "#008080",
           }}
-          hoverStyle={{ borderColor: "#0EBC60" }}
-          pressStyle={{ borderColor: "#0EBC60" }}
+          hoverStyle={{ borderColor: "#008080" }}
+          pressStyle={{ borderColor: "#008080" }}
           onPress={() => {
             router.push("/auth/login");
           }}
@@ -122,15 +122,15 @@ export default function Index() {
           style={{
             flex: 1,
             color: "#fff",
-            backgroundColor: "#0EBC60",
+            backgroundColor: "#008080",
             borderWidth: 1,
-            borderColor: "#0EBC60",
+            borderColor: "#008080",
           }}
           onPress={() => {
             router.push("/auth/signup");
           }}
-          hoverStyle={{ backgroundColor: "#0EBC60", borderColor: "#0EBC60" }}
-          pressStyle={{ backgroundColor: "#0EBC60", borderColor: "#0EBC60" }}
+          hoverStyle={{ backgroundColor: "#008080", borderColor: "#008080" }}
+          pressStyle={{ backgroundColor: "#008080", borderColor: "#008080" }}
         >
           Sign up
         </Button>

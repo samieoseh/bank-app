@@ -4,6 +4,13 @@ import React from "react";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import {
+  ArrowLeftRight,
+  HandCoins,
+  LockKeyhole,
+  LucideHome,
+  Settings,
+} from "lucide-react-native";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -20,22 +27,46 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "home" : "home-outline"}
-              color={color}
-            />
+            <LucideHome stroke={color} height={28} width={28} />
           ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="savings"
         options={{
-          title: "Explore",
+          title: "Savings",
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "code-slash" : "code-slash-outline"}
-              color={color}
-            />
+            <LockKeyhole stroke={color} height={28} width={28} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="transactions"
+        options={{
+          title: "Transactions",
+          tabBarIcon: ({ color, focused }) => (
+            <ArrowLeftRight stroke={color} height={28} width={28} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="loans"
+        options={{
+          title: "Loans",
+          tabBarIcon: ({ color, focused }) => (
+            <HandCoins stroke={color} height={28} width={28} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: "Settings",
+          tabBarIcon: ({ color, focused }) => (
+            <Settings stroke={color} height={28} width={28} />
           ),
         }}
       />

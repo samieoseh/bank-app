@@ -16,14 +16,14 @@ export default function StyledButton({
     <Button
       style={{
         color: "#fff",
-        backgroundColor: "#0EBC60",
+        backgroundColor: "#008080",
         borderWidth: 1,
-        borderColor: "#0EBC60",
+        borderColor: "#008080",
         height: 40,
         ...buttonStyle,
       }}
-      //hoverStyle={{ backgroundColor: "#C5F5D6", borderColor: "#0EBC60" }}
-      //pressStyle={{ backgroundColor: "#C5F5D6", borderColor: "#0EBC60" }}
+      //hoverStyle={{ backgroundColor: "#C5F5D6", borderColor: "#008080" }}
+      //pressStyle={{ backgroundColor: "#C5F5D6", borderColor: "#008080" }}
       {...props}
     >
       {children}

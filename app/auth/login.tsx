@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import { Input, Text } from "tamagui";
 import { Link, useRouter } from "expo-router";
 import StyledButton from "@/components/ui/button";
-import { useAuth } from "../context/AuthContext";
+import { AuthContextProps, useAuth } from "../context/AuthContext";
 import styles from "./styles";
 import { Eye, EyeOff } from "lucide-react-native";
 
 export default function Login() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login } = useAuth() as AuthContextProps;
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -60,7 +60,6 @@ export default function Login() {
         <View
           style={{
             width: "100%",
-            marginHorizontal: "auto",
             position: "relative",
           }}
         >
@@ -108,8 +107,8 @@ export default function Login() {
         <StyledButton
           buttonStyle={{
             width: "100%",
-            backgroundColor: login.isPending ? "#D3D3D3" : "#0EBC60",
-            borderColor: login.isPending ? "#D3D3D3" : "#0EBC60",
+            backgroundColor: login.isPending ? "#D3D3D3" : "#008080",
+            borderColor: login.isPending ? "#D3D3D3" : "#008080",
           }}
           disabled={login.isPending}
           onPress={() => {
@@ -141,10 +140,10 @@ export default function Login() {
         <Link href="/auth/signup">
           <Text
             style={{
-              color: "#0EBC60",
-              fontWeight: "900",
+              color: "#008080",
               textDecorationLine: "underline",
             }}
+            fontWeight="900"
           >
             Click here to register
           </Text>
@@ -153,10 +152,10 @@ export default function Login() {
         <Link href="/auth/register-with-account">
           <Text
             style={{
-              color: "#0EBC60",
-              fontWeight: "900",
+              color: "#008080",
               textDecorationLine: "underline",
             }}
+            fontWeight="900"
           >
             Register with account number
           </Text>

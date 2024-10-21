@@ -15,6 +15,7 @@ export default function TokenInput({
   setValue: Function;
   length?: number;
 }) {
+  console.log({ value, setValue, valueLabel, length });
   const dispatch: AppDispatch = useDispatch();
 
   const inputRefs = useRef<Array<any>>([]);
@@ -22,8 +23,8 @@ export default function TokenInput({
   const handleInputChange = (text: string, index: number) => {
     const newToken = value.split("");
     newToken[index] = text;
-    dispatch(setValue({ [valueLabel]: newToken.join("") }));
-
+    //dispatch(setValue({ [valueLabel]: newToken.join("") }));
+    setValue(newToken.join(""));
     // Move to next input if the current one is filled
     if (text && index < inputRefs.current.length - 1) {
       inputRefs.current[index + 1].focus();

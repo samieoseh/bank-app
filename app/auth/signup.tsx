@@ -28,7 +28,7 @@ export default function Signup() {
         <View style={styles.containerBox}>
           <View>
             <ArrowLeft
-              stroke="#0EBC60"
+              stroke="#008080"
               onPress={() => {
                 if (registrationStep === 1) {
                   router.push("/");

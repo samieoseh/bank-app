@@ -1,88 +1,236 @@
-import { Image, StyleSheet, Platform } from "react-native";
-
-import { HelloWave } from "@/components/HelloWave";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import StyledButton from "@/components/ui/button";
-import { useAuth } from "@/app/context/AuthContext";
+import { TouchableOpacity, View } from "react-native";
+import React from "react";
+import { Image, Text } from "tamagui";
+import homeStyles from "@/style/home-style";
+import {
+  ArrowLeftRight,
+  LucideBell,
+  LucideChevronRight,
+  LucideClock,
+} from "lucide-react-native";
+import { selectCurrentLoggedInUser } from "@/store/authSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import Favorite from "@/components/home/Favorite";
 import { useRouter } from "expo-router";
 
-export default function HomeScreen() {
-  const { logout } = useAuth();
+export default function Home() {
   const router = useRouter();
+  const user = useSelector((state: RootState) =>
+    selectCurrentLoggedInUser(state)
+  );
 
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-      headerImage={
-        <Image
-          source={require("@/assets/images/partial-react-logo.png")}
-          style={styles.reactLogo}
-        />
-      }
+    <View
+      style={{
+        width: "90%",
+        marginHorizontal: "auto",
+        height: "100%",
+        paddingVertical: 40,
+      }}
     >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{" "}
-          to see changes. Press{" "}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: "cmd + d", android: "cmd + m" })}
-          </ThemedText>{" "}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this
-          starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{" "}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText>{" "}
-          to get a fresh <ThemedText type="defaultSemiBold">app</ThemedText>{" "}
-          directory. This will move the current{" "}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{" "}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-      <StyledButton
-        onPress={() => {
-          logout();
-          router.push("/auth/login");
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
         }}
       >
-        Logout
-      </StyledButton>
-    </ParallaxScrollView>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 20,
+          }}
+        >
+          <View
+            style={{
+              borderRadius: 16,
+              overflow: "hidden",
+              width: 32,
+              height: 32,
+            }}
+          >
+            <Image
+              source={{
+                uri: "https://picsum.photos/200/300",
+              }}
+              style={{
+                width: 32,
+                height: 32,
+              }}
+            />
+          </View>
+          <Text
+            style={{
+              color: "#111",
+            }}
+          >
+            Hi, {user.fullName}!
+          </Text>
+        </View>
+        <LucideBell stroke="#111" />
+      </View>
+
+      <View
+        style={{
+          backgroundColor: "#008080",
+          //height: 80,
+          width: "100%",
+          marginTop: 20,
+          borderRadius: 16,
+          padding: 15,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              color: "#fff",
+            }}
+            fontSize="$2"
+            fontWeight="200"
+          >
+            Available Balance
+          </Text>
+        </View>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            fontSize="$8"
+            fontWeight="900"
+            style={{
+              color: "#fff",
+            }}
+          >
+            {"₦" + user.balance}
+          </Text>
+          <TouchableOpacity onPress={() => console.log("Button pressed")}>
+            <View
+              style={{
+                borderRadius: 16,
+                backgroundColor: "#fff",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 4,
+              }}
+            >
+              <ArrowLeftRight
+                height={24}
+                width={24}
+                stroke="#008080"
+                onPress={() => {
+                  router.push("/transactions");
+                }}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View
+        style={{
+          minHeight: 150,
+          borderRadius: 16,
+          padding: 15,
+          display: "flex",
+          flexDirection: "column",
+          backgroundColor: "#fff",
+          marginTop: 10,
+        }}
+      >
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text fontSize="$3" fontWeight="500" style={{ color: "#111" }}>
+            Recent Transactions
+          </Text>
+          <TouchableOpacity onPress={() => console.log("Button pressed")}>
+            <Text
+              fontSize="$2"
+              fontWeight="200"
+              style={{ color: "#008080", textDecorationLine: "underline" }}
+            >
+              View All
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <View>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 25,
+              gap: 8,
+            }}
+          >
+            <LucideClock height={20} width={20} stroke="#999" />
+            <Text
+              style={{
+                color: "#999",
+              }}
+              fontSize="$3"
+            >
+              No recent transactions
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      <View
+        style={{
+          marginTop: 10,
+          display: "flex",
+          gap: 5,
+          padding: 15,
+        }}
+      >
+        <Text fontSize="$3" fontWeight="500" style={{ color: "#111" }}>
+          Favorites
+        </Text>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: 5,
+            flexWrap: "wrap",
+          }}
+        >
+          {[
+            { firstName: "John", lastName: "DOE" },
+            { firstName: "Lionel", lastName: "MESSI" },
+            { firstName: "Cristiano", lastName: "RONALDO" },
+            { firstName: "Neymar", lastName: "JR" },
+          ].map((data, index) => (
+            <Favorite key={index} data={data} />
+          ))}
+        </View>
+      </View>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
-  },
-});

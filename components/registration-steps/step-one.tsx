@@ -9,8 +9,7 @@ import {
   setUserRegistrationData,
 } from "@/store/authSlice";
 import { AppDispatch, RootState } from "@/store";
-import axios from "axios";
-import { useToastController } from "@tamagui/toast";
+import axios, { isAxiosError } from "axios";
 
 interface Errors {
   username?: string;
@@ -47,8 +46,12 @@ export default function StepOne({
         incrementStep();
       }
     } catch (error) {
-      setErrors({ username: error.response.data });
-      usernameInputRef?.current?.focus();
+      if (isAxiosError(error)) {
+        setErrors({ username: error?.response?.data });
+        usernameInputRef?.current?.focus();
+      } else {
+        console.error(error);
+      }
     }
   };
 

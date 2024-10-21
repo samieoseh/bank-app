@@ -17,8 +17,8 @@ export default function ActionButton({
     <StyledButton
       buttonStyle={{
         width: "100%",
-        backgroundColor: canContinue() && !loading ? "#0EBC60" : "#D3D3D3",
-        borderColor: canContinue() && !loading ? "#0EBC60" : "#D3D3D3",
+        backgroundColor: canContinue() && !loading ? "#008080" : "#D3D3D3",
+        borderColor: canContinue() && !loading ? "#008080" : "#D3D3D3",
         marginVertical: 35,
         // position: "absolute",
         // bottom: 0,
