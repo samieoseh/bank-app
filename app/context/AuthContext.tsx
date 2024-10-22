@@ -179,6 +179,7 @@ export const AuthProvider = ({ children }: any) => {
   useEffect(() => {
     const loadTokenAndUser = async () => {
       try {
+        axios.defaults.baseURL = process.env.EXPO_PUBLIC_REMOTE_DEPLOYMENT_URL;
         const token = await getValueFor(
           process.env.EXPO_PUBLIC_JWT_KEY || "jwt_access_token"
         );
@@ -191,7 +192,7 @@ export const AuthProvider = ({ children }: any) => {
           axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
           // get user
-          const response = await axios.get(process.env.EXPO_PUBLIC_REMOTE_DEPLOYMENT_URL + "/api/users/me");
+          const response = await axios.get("/api/users/me");
           const user = response.data;
           dispatch(
             setCurrentLoggedInUser({

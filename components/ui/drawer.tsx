@@ -1,20 +1,74 @@
 import { View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Sheet } from "@tamagui/sheet";
 
 import { Button, Input, Text, XStack, YStack } from "tamagui";
 import TokenInput from "./token-input";
+import { TransactionReciepientType } from "@/typings/typings";
+import axios, { isAxiosError } from "axios";
+import { useSelector } from "react-redux";
+import { selectCurrentLoggedInUser } from "@/store/authSlice";
+import { RootState } from "@/store";
+import { useRouter } from "expo-router";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
 
-export default function Drawer({ disabled }: { disabled: boolean }) {
+export default function Drawer({
+  disabled,
+  amount,
+  reciepient,
+  accountNumber,
+}: {
+  disabled: boolean;
+  amount: number;
+  reciepient: TransactionReciepientType | null;
+  accountNumber: string;
+}) {
+  const router = useRouter();
+  const user = useSelector((state: RootState) =>
+    selectCurrentLoggedInUser(state)
+  );
+
+  const [errorMessage, setErrorMessage] = useState<string | null>("");
   const [position, setPosition] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [modal, setModal] = React.useState(true);
   const [snapPointsMode, setSnapPointsMode] =
     React.useState<(typeof spModes)[number]>("constant");
-  const [transactionPin, setTransactionPin] = React.useState("");
+  const [transactionPin, setTransactionPin] = React.useState("0220");
   const snapPoints = [400, 190];
+
+  const handleTransfer = async () => {
+    console.log("Transfering money");
+    try {
+      await axios.post(
+        process.env.EXPO_PUBLIC_REMOTE_DEPLOYMENT_URL + "/api/transactions",
+        {
+          sender: user.id,
+          reciever: reciepient?.id,
+          amount,
+          description: "test",
+          transactionType: "TRANSFER",
+          transactionPin,
+        }
+      );
+      router.push("/");
+    } catch (error) {
+      console.log("Error: ", error);
+
+      if (!isAxiosError(error)) {
+        console.error("Unexpected error: ", error);
+        return;
+      }
+
+      if (!error.response) {
+        setErrorMessage("Network error. Please try again later.");
+        return;
+      }
+
+      setErrorMessage(error.response.data.message);
+    }
+  };
 
   return (
     <View>
@@ -61,7 +115,7 @@ export default function Drawer({ disabled }: { disabled: boolean }) {
                 color: "#008080",
               }}
             >
-              ₦200
+              ₦{amount}
             </Text>
             <View
               style={{
@@ -83,9 +137,27 @@ export default function Drawer({ disabled }: { disabled: boolean }) {
                     fontWeight: 700,
                   }}
                 >
-                  1234567890
+                  {accountNumber}
                 </Text>
               </View>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: "80%",
+                }}
+              >
+                <Text>Reciepient</Text>
+                <Text
+                  style={{
+                    fontWeight: 700,
+                  }}
+                >
+                  {reciepient?.fullName}
+                </Text>
+              </View>
+
               <View
                 style={{
                   display: "flex",
@@ -100,7 +172,7 @@ export default function Drawer({ disabled }: { disabled: boolean }) {
                     fontWeight: 700,
                   }}
                 >
-                  ₦200
+                  ₦{amount}
                 </Text>
               </View>
               <View
@@ -134,7 +206,7 @@ export default function Drawer({ disabled }: { disabled: boolean }) {
                     fontWeight: 700,
                   }}
                 >
-                  ₦200
+                  ₦{amount}
                 </Text>
               </View>
             </View>
@@ -161,12 +233,16 @@ export default function Drawer({ disabled }: { disabled: boolean }) {
             </View>
             <Button
               style={{
-                backgroundColor: "#008080",
+                backgroundColor:
+                  transactionPin.length < 4 ? "#d3d3d3" : "#008080",
                 color: "#fff",
                 marginTop: 20,
                 width: "80%",
               }}
-              disabled={disabled}
+              onPress={async () => {
+                await handleTransfer();
+              }}
+              disabled={transactionPin.length < 4}
             >
               Send money
             </Button>

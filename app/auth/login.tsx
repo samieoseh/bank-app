@@ -11,8 +11,8 @@ export default function Login() {
   const router = useRouter();
   const { login } = useAuth() as AuthContextProps;
   const [showPassword, setShowPassword] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("samieoseh");
+  const [password, setPassword] = useState("samieoseh@123");
 
   return (
     <View style={styles.container}>
