@@ -3,16 +3,18 @@ import React, { useState } from "react";
 import { Input, Text } from "tamagui";
 import { Link, useRouter } from "expo-router";
 import StyledButton from "@/components/ui/button";
-import { AuthContextProps, useAuth } from "../context/AuthContext";
+import { AuthContextProps } from "../context/AuthContext";
 import styles from "./styles";
 import { Eye, EyeOff } from "lucide-react-native";
+import socket from "../../socket";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Login() {
   const router = useRouter();
   const { login } = useAuth() as AuthContextProps;
   const [showPassword, setShowPassword] = useState(false);
-  const [username, setUsername] = useState("samieoseh");
-  const [password, setPassword] = useState("samieoseh@123");
+  const [username, setUsername] = useState("samie");
+  const [password, setPassword] = useState("samie");
 
   return (
     <View style={styles.container}>
@@ -115,7 +117,9 @@ export default function Login() {
             login.mutate(
               { username, password },
               {
-                onSuccess: () => {
+                onSuccess: ({ user }) => {
+                  console.log({ user });
+                  socket.emit("login", user);
                   router.push("/(app)/(tabs)/");
                 },
               }

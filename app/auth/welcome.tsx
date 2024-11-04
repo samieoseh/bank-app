@@ -5,11 +5,7 @@ import { Button, Text } from "tamagui";
 import { useRouter } from "expo-router";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import {
-  selectCurrentLoggedInUser,
-  selectUserRegistrationData,
-} from "@/store/authSlice";
-import { useAuth } from "../context/AuthContext";
+import { selectCurrentLoggedInUser } from "@/store/authSlice";
 
 export default function Welcome() {
   const currentLoggedInUser = useSelector((state: RootState) =>

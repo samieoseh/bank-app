@@ -1,25 +1,20 @@
 import { View } from "react-native";
 import { useState } from "react";
-import { Button, Input, Label, Text } from "tamagui";
+import { Label, Text } from "tamagui";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { selectCurrentLoggedInUser } from "@/store/authSlice";
 import Drawer from "@/components/ui/drawer";
 import axios, { isAxiosError } from "axios";
 import DebouncedInput from "@/components/ui/debounced-input";
-import { TransactionReciepientType } from "@/typings/typings";
-import {
-  LucideCheck,
-  LucideCheckCheck,
-  LucideCircle,
-} from "lucide-react-native";
+import { TransactionReciepientProps } from "@/typings/transaction-typings";
 
 export default function Transaction() {
   const [accountNumber, setAccountNumber] = useState("1234567890");
   const [amount, setAmount] = useState("200");
   const [isAccountNumberVerified, setIsAccountNumberVerified] = useState(true);
   const [reciepient, setReciepient] =
-    useState<TransactionReciepientType | null>(null);
+    useState<TransactionReciepientProps | null>(null);
   const [isBalanceEnough, setIsBalanceEnough] = useState<undefined | boolean>();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -27,8 +22,7 @@ export default function Transaction() {
     try {
       setAccountNumber(accountNumber);
       const response = await axios.get(
-        process.env.EXPO_PUBLIC_REMOTE_DEPLOYMENT_URL +
-          `/api/transactions/verify-and-get-user/${accountNumber}`
+        `/api/transactions/verify-and-get-user/${accountNumber}`
       );
       const data = await response.data;
 
@@ -65,8 +59,7 @@ export default function Transaction() {
       console.log("Checking balance for amount:", amount);
 
       const response = await axios.get(
-        process.env.EXPO_PUBLIC_REMOTE_DEPLOYMENT_URL +
-          `/api/transactions/verify-balance/${amount}`
+        `/api/transactions/verify-balance/${amount}`
       );
       const data = await response.data;
 
@@ -95,8 +88,6 @@ export default function Transaction() {
       }
     }
   };
-
-  console.log({ isBalanceEnough, amount, isAccountNumberVerified });
 
   const user = useSelector((state: RootState) =>
     selectCurrentLoggedInUser(state)

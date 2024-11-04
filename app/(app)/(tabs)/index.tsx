@@ -1,24 +1,58 @@
 import { TouchableOpacity, View } from "react-native";
-import React from "react";
-import { Image, Text } from "tamagui";
-import homeStyles from "@/style/home-style";
+import React, { useEffect } from "react";
+import { Button, Image, Text } from "tamagui";
+import * as Notifications from "expo-notifications";
 import {
   ArrowLeftRight,
   LucideBell,
   LucideChevronRight,
   LucideClock,
 } from "lucide-react-native";
-import { selectCurrentLoggedInUser } from "@/store/authSlice";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { getUser, selectCurrentLoggedInUser } from "@/store/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store";
 import Favorite from "@/components/home/Favorite";
 import { useRouter } from "expo-router";
+import {
+  schedulePushReceiveTransactionNotification,
+  schedulePushSendTransactionNotification,
+} from "@/utils/notifications-utils";
+import socket from "../../../socket";
+import { TransactionNotificationProps } from "@/typings/transaction-typings";
 
 export default function Home() {
   const router = useRouter();
+  const dispatch = useDispatch() as AppDispatch;
   const user = useSelector((state: RootState) =>
     selectCurrentLoggedInUser(state)
   );
+
+  // event listeners
+  useEffect(() => {
+    socket.on("transaction-sent", async (data) => {
+      await schedulePushSendTransactionNotification(data);
+
+      console.log("fetching new data");
+      dispatch(getUser());
+    });
+
+    socket.on(
+      "transaction-received",
+      async (data: TransactionNotificationProps) => {
+        console.log("transaction received", data);
+        await schedulePushReceiveTransactionNotification(data);
+
+        // fetch new data
+        console.log("fetching new data");
+        dispatch(getUser());
+      }
+    );
+
+    return () => {
+      socket.off("transaction-sent");
+      socket.off("transaction-received");
+    };
+  }, []);
 
   return (
     <View

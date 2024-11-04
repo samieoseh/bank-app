@@ -14,7 +14,7 @@ import {
 import { useToastController } from "@tamagui/toast";
 import { useRouter } from "expo-router";
 import axios from "axios";
-import { useAuth } from "@/app/context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function StepThree() {
   const userUpdateRegistrationData = useSelector((state: RootState) =>

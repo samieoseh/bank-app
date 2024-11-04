@@ -15,7 +15,8 @@ import {
 } from "@/store/authSlice";
 import { useToastController } from "@tamagui/toast";
 import { useRouter } from "expo-router";
-import { useAuth } from "@/app/context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
+// import socket from "../../socket";
 
 export default function StepSix() {
   const registrationData = useSelector((state: RootState) =>
@@ -98,6 +99,8 @@ export default function StepSix() {
       });
 
       dispatch(resetUserRegistrationData());
+      // emit user login
+
       router.push("/auth/welcome");
     } catch (error) {
       console.error(error);

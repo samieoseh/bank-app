@@ -1,60 +1,9 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
+import { AuthStateProps, CurrentLoggedInUserProps, UserRegistrationDataProps, UserUpdateRegistrationDataProps } from "@/typings/user-typings";
 
-interface UserRegistrationData {
-  fullName: string,
-  phoneNumber: string;
-  username: string;
-  emailAddress: string;
-  emailVerified: boolean;
-  token: string
-  address: string, 
-  password: string,
-  confirmPassword: string,
-  transactionPin: string,
-  confirmTransactionPin: string,
-  balance: number,
-  active: boolean,
-}
 
-interface UserRole {
-  id: string,
-  roleName: string,
-}
-
-interface AccountType {
-  id: string,
-  typeName: string,
-}
-
-interface CurrentLoggedInUser {
-  fullName: string, 
-  accountNumber: string,
-  username: string,
-  emailAddress: string,
-  balance: number,
-  id: string,
-  active: boolean,
-  userRole: UserRole,
-  accountType: AccountType,
-}
-
-interface UserUpdateRegistrationData {
-  fullName: string,
-  accountNumber: string,
-  username: string, 
-  password: string, 
-  confirmPassword: string,
-  transactionPin: string,
-  confirmTransactionPin: string
-}
-
-export interface AuthState {
-  userRegistrationData: UserRegistrationData;
-  currentLoggedInUser: CurrentLoggedInUser;
-  userUpdateRegistrationData: UserUpdateRegistrationData;
-}
-
-const initialState: AuthState = {
+const initialState: AuthStateProps = {
   userRegistrationData: {
     fullName: "",
     phoneNumber: "",
@@ -99,6 +48,13 @@ const initialState: AuthState = {
   }
 };
 
+export const getUser = createAsyncThunk("auth/getUser", async () => {
+  const response = await axios.get(process.env.EXPO_PUBLIC_REMOTE_DEPLOYMENT_URL + `/api/users/me`);
+  const data = await response.data;
+  console.log('data', data);
+  return data;
+})
+  
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -126,19 +82,24 @@ const authSlice = createSlice({
       state.currentLoggedInUser = action.payload;
     }
   },
+  extraReducers: (builder) => {
+    builder.addCase(getUser.fulfilled, (state: AuthStateProps, action) => {
+      state.currentLoggedInUser = action.payload;
+    });
+  }
 });
 
 // Export the actions
 export const { setUserRegistrationData, setUserUpdateRegistrationData, resetUserRegistrationData, resetUserUpdateRegistrationData, setCurrentLoggedInUser } = authSlice.actions;
 
 // Selector
-export const selectUserRegistrationData = (state: { auth: AuthState }): UserRegistrationData => 
+export const selectUserRegistrationData = (state: { auth: AuthStateProps }): UserRegistrationDataProps => 
   state.auth.userRegistrationData;
 
-export const selectUserUpdateRegistrationData = (state: { auth: AuthState }): UserUpdateRegistrationData =>
+export const selectUserUpdateRegistrationData = (state: { auth: AuthStateProps }): UserUpdateRegistrationDataProps =>
   state.auth.userUpdateRegistrationData;
 
-export const selectCurrentLoggedInUser = (state: { auth: AuthState }): CurrentLoggedInUser => state.auth.currentLoggedInUser;
+export const selectCurrentLoggedInUser = (state: { auth: AuthStateProps }): CurrentLoggedInUserProps => state.auth.currentLoggedInUser;
 
 // Export the reducer
 export default authSlice.reducer;

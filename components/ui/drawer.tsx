@@ -2,14 +2,15 @@ import { View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Sheet } from "@tamagui/sheet";
 
-import { Button, Input, Text, XStack, YStack } from "tamagui";
+import { Button, Text } from "tamagui";
 import TokenInput from "./token-input";
-import { TransactionReciepientType } from "@/typings/typings";
 import axios, { isAxiosError } from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentLoggedInUser } from "@/store/authSlice";
 import { RootState } from "@/store";
 import { useRouter } from "expo-router";
+import { TransactionReciepientProps } from "@/typings/transaction-typings";
+import { setLastTransaction } from "@/store/transactionSlice";
 
 const spModes = ["percent", "constant", "fit", "mixed"] as const;
 
@@ -21,10 +22,11 @@ export default function Drawer({
 }: {
   disabled: boolean;
   amount: number;
-  reciepient: TransactionReciepientType | null;
+  reciepient: TransactionReciepientProps | null;
   accountNumber: string;
 }) {
   const router = useRouter();
+  const dispatch = useDispatch();
   const user = useSelector((state: RootState) =>
     selectCurrentLoggedInUser(state)
   );
@@ -41,18 +43,24 @@ export default function Drawer({
   const handleTransfer = async () => {
     console.log("Transfering money");
     try {
-      await axios.post(
-        process.env.EXPO_PUBLIC_REMOTE_DEPLOYMENT_URL + "/api/transactions",
-        {
-          sender: user.id,
-          reciever: reciepient?.id,
-          amount,
-          description: "test",
-          transactionType: "TRANSFER",
-          transactionPin,
-        }
+      const response = await axios.post("/api/transactions", {
+        sender: user.id,
+        reciever: reciepient?.id,
+        amount,
+        description: "test",
+        transactionType: "TRANSFER",
+        transactionPin,
+      });
+      const transactionData = await response.data;
+      console.log({ transactionData });
+      dispatch(
+        setLastTransaction({
+          transactionId: transactionData.id,
+          userId: user.id,
+        })
       );
-      router.push("/");
+      setOpen(false);
+      router.push("/receipts");
     } catch (error) {
       console.log("Error: ", error);
 

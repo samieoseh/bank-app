@@ -2,11 +2,12 @@ import { Image, View } from "react-native";
 import { Button, Text } from "tamagui";
 import React from "react";
 import { Redirect, useRouter } from "expo-router";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
+import { AuthContextProps } from "./context/AuthContext";
 
 export default function Index() {
   const router = useRouter();
-  const { authState } = useAuth();
+  const { authState } = useAuth() as AuthContextProps;
 
   if (authState?.waitAuthCheck) {
     return (

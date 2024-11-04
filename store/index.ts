@@ -1,15 +1,17 @@
 // store/store.ts
 import { configureStore } from "@reduxjs/toolkit";
-import { AuthState } from "./authSlice"; // Adjust the import path if necessary
 import authReducer from "./authSlice";
+import transactionReducer from "./transactionSlice";
+import { AuthStateProps } from "@/typings/user-typings";
 
 export interface RootState {
-  auth: AuthState;
+  auth: AuthStateProps;
 }
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
+    transactions: transactionReducer
   },
 });
 

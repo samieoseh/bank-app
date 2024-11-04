@@ -30,8 +30,7 @@
     "plugins": [
       "expo-router",
       "expo-secure-store",
-      "expo-font",
-      "@notifee/react-native"
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

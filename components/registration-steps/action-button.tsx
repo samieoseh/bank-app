@@ -4,12 +4,12 @@ import StyledButton from "../ui/button";
 
 export default function ActionButton({
   pressHandler,
-  canContinue,
+  canContinue = () => true,
   loading,
   message,
 }: {
   pressHandler: () => void;
-  canContinue: () => boolean;
+  canContinue?: () => boolean;
   loading?: boolean;
   message?: string;
 }) {
